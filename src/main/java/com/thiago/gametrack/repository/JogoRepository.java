@@ -1,0 +1,14 @@
+package com.thiago.gametrack.repository;
+
+import com.thiago.gametrack.entity.Jogo;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
+
+@Repository
+public interface JogoRepository extends JpaRepository<Jogo, Long> {
+
+    Optional<Jogo> findByExternalId(String externalId);
+
+}
