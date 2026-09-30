@@ -51,4 +51,8 @@ public Page<JogoProjection> buscarTodos(Pageable pageable){
             }
         }
     }
+
+    public Jogo buscarPorId(Long id) {
+        return jogoRepository.findById(id).orElse(null);
+    }
 }

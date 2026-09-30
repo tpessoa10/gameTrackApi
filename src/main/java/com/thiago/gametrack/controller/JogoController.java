@@ -1,6 +1,8 @@
 package com.thiago.gametrack.controller;
 
+import com.thiago.gametrack.dto.JogoResponseDto;
 import com.thiago.gametrack.dto.PageableDto;
+import com.thiago.gametrack.dto.mapper.JogoMapper;
 import com.thiago.gametrack.dto.mapper.PageableMapper;
 import com.thiago.gametrack.entity.Jogo;
 import com.thiago.gametrack.projection.JogoProjection;
@@ -12,10 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,8 +27,14 @@ public class JogoController {
     private JogoService jogoService;
 
     @GetMapping
-    public ResponseEntity<PageableDto<JogoProjection>> getAll(@PageableDefault(size = 5, sort = {"nome"}) Pageable pageable) {
+    public ResponseEntity<PageableDto<JogoProjection>> getAll(@PageableDefault(size = 10, sort = {"nome"}) Pageable pageable) {
         Page<JogoProjection> jogos = jogoService.buscarTodos(pageable);
         return ResponseEntity.ok(PageableMapper.toDto(jogos));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<JogoResponseDto> getById(@PathVariable Long id) {
+        Jogo jogo = jogoService.buscarPorId(id);
+        return ResponseEntity.ok(JogoMapper.toDto(jogo));
     }
 }
