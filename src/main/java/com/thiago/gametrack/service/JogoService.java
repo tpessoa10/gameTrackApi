@@ -22,7 +22,7 @@ public class JogoService {
     private final JogoApiClient jogoApiClient;
     private final JogoRepository jogoRepository;
 
-public Page<JogoProjection> buscarTodos(Pageable pageable){
+    public Page<JogoProjection> buscarTodos(Pageable pageable){
     return jogoRepository.findAllPageable(pageable);
 }
 
