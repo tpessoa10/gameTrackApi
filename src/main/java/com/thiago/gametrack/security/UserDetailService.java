@@ -1,4 +1,4 @@
-package com.thiago.gametrack.config;
+package com.thiago.gametrack.security;
 
 
 import com.thiago.gametrack.entity.Usuario;

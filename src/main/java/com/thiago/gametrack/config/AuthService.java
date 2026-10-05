@@ -1,6 +1,8 @@
 package com.thiago.gametrack.config;
 
 import com.thiago.gametrack.dto.LoginRequestDto;
+import com.thiago.gametrack.dto.LoginResponseDto;
+import com.thiago.gametrack.security.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -13,9 +15,15 @@ public class AuthService {
 
     private final AuthenticationManager authenticationManager;
 
-    public Authentication autenticar(LoginRequestDto dto){
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getSenha());
+    private final JwtService jwtService;
 
-        return authenticationManager.authenticate(token);
+    public LoginResponseDto autenticar(LoginRequestDto dto){
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getSenha());
+
+        Authentication authentication = authenticationManager.authenticate(authenticationToken);
+
+        String jwt = jwtService.gerarToken(authentication.getName());
+
+        return new LoginResponseDto(jwt);
     }
 }
