@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,5 +37,14 @@ public class JogoController {
     public ResponseEntity<JogoResponseDto> getById(@PathVariable Long id) {
         Jogo jogo = jogoService.buscarPorId(id);
         return ResponseEntity.ok(JogoMapper.toDto(jogo));
+    }
+
+    @PostMapping("/teste")
+    public ResponseEntity<String> testePost(
+            Authentication authentication
+    ) {
+        return ResponseEntity.ok(
+                "Usuário autenticado: " + authentication.getName()
+        );
     }
 }

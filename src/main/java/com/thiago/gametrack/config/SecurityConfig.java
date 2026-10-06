@@ -4,6 +4,7 @@ import com.thiago.gametrack.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -27,17 +28,26 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                // 1. Habilite o suporte a CORS (se houver integração com frontend)
+                .cors(cors -> cors.configure(http))
+
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(
                         SessionCreationPolicy.STATELESS
                 ))
                 .authorizeHttpRequests(auth -> auth
+                        // Liberando requisições Preflight CORS (OPTIONS)
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
+                        // Use '/**' para garantir que sub-rotas também fiquem públicas
                         .requestMatchers(
-                                "/api/v1/auth",
-                                "/api/v1/usuarios"
-                        )
-                        .permitAll().anyRequest().authenticated()
-                ).addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                                "/api/v1/auth/**",
+                                "/api/v1/usuarios/**"
+                        ).permitAll()
+
+                        .anyRequest().authenticated()
+                )
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
