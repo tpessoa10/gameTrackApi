@@ -45,6 +45,12 @@ public class SecurityConfig {
                                 "/api/v1/usuarios/**"
                         ).permitAll()
 
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/v1/jogos",
+                                "/api/v1/jogos/**"
+                        ).permitAll()
+
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

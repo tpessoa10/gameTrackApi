@@ -1,6 +1,7 @@
 package com.thiago.gametrack.service;
 
 import com.thiago.gametrack.dto.UsuarioJogoCreateDto;
+import com.thiago.gametrack.dto.UsuarioJogoResponseDto;
 import com.thiago.gametrack.entity.Jogo;
 import com.thiago.gametrack.entity.Usuario;
 import com.thiago.gametrack.entity.UsuarioJogo;
@@ -8,8 +9,11 @@ import com.thiago.gametrack.repository.JogoRepository;
 import com.thiago.gametrack.repository.UsuarioJogoRepository;
 import com.thiago.gametrack.repository.UsuarioRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -39,6 +43,36 @@ public class UsuarioJogoService {
         usuarioJogo.setStatusJogo(usuarioJogoCreateDto.getStatusJogo());
 
         usuarioJogoRepository.save(usuarioJogo);
+    }
+
+    @Transactional
+    public List<UsuarioJogoResponseDto> buscarMinhaLista(
+            String email
+    ) {
+
+        Usuario usuario = usuarioRepository
+                .findByEmail(email)
+                .orElseThrow(() ->
+                        new EntityNotFoundException(
+                                "Usuário não encontrado"
+                        )
+                );
+
+        List<UsuarioJogo> lista =
+                usuarioJogoRepository
+                        .findAllByUsuarioId(usuario.getId());
+
+        return lista.stream()
+                .map(usuarioJogo ->
+                        new UsuarioJogoResponseDto(
+                                usuarioJogo.getId(),
+                                usuarioJogo.getJogo().getId(),
+                                usuarioJogo.getJogo().getNome(),
+                                usuarioJogo.getJogo().getCapa(),
+                                usuarioJogo.getStatusJogo()
+                        )
+                )
+                .toList();
     }
 
 }

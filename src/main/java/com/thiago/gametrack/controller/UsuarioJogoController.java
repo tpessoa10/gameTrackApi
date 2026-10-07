@@ -2,6 +2,7 @@ package com.thiago.gametrack.controller;
 
 import com.thiago.gametrack.dto.UsuarioCreateDto;
 import com.thiago.gametrack.dto.UsuarioJogoCreateDto;
+import com.thiago.gametrack.dto.UsuarioJogoResponseDto;
 import com.thiago.gametrack.service.UsuarioJogoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -9,10 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/minha-lista")
@@ -31,5 +31,21 @@ public class UsuarioJogoController {
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
 
+    }
+
+    @GetMapping
+    public ResponseEntity<List<UsuarioJogoResponseDto>> buscarMinhaLista(
+            Authentication authentication
+    ) {
+
+        System.out.println("ENTROU NO GET MINHA LISTA");
+        System.out.println("Usuário: " + authentication.getName());
+
+        String email = authentication.getName();
+
+        List<UsuarioJogoResponseDto> lista =
+                usuarioJogoService.buscarMinhaLista(email);
+
+        return ResponseEntity.ok(lista);
     }
 }
