@@ -1,6 +1,7 @@
 package com.thiago.gametrack.repository;
 
 import com.thiago.gametrack.entity.Jogo;
+import com.thiago.gametrack.entity.UsuarioJogo;
 import com.thiago.gametrack.projection.JogoProjection;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,5 +23,6 @@ public interface JogoRepository extends JpaRepository<Jogo, Long> {
 
 
     Optional<Jogo> findByExternalId(String externalId);
+
 
 }

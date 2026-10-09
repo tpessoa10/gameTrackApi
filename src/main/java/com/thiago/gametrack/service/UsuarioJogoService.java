@@ -2,6 +2,7 @@ package com.thiago.gametrack.service;
 
 import com.thiago.gametrack.dto.UsuarioJogoCreateDto;
 import com.thiago.gametrack.dto.UsuarioJogoResponseDto;
+import com.thiago.gametrack.dto.UsuarioJogoUpdateDto;
 import com.thiago.gametrack.entity.Jogo;
 import com.thiago.gametrack.entity.Usuario;
 import com.thiago.gametrack.entity.UsuarioJogo;
@@ -73,6 +74,37 @@ public class UsuarioJogoService {
                         )
                 )
                 .toList();
+    }
+
+
+    @Transactional
+    public UsuarioJogoResponseDto alterarStatus(
+            Long id,
+            UsuarioJogoUpdateDto dto,
+            String email
+    ) {
+        Usuario usuario = usuarioRepository.findByEmail(email)
+                .orElseThrow(() ->
+                        new EntityNotFoundException("Usuário não encontrado")
+                );
+
+        UsuarioJogo usuarioJogo = usuarioJogoRepository
+                .findByIdAndUsuarioId(id, usuario.getId())
+                .orElseThrow(() ->
+                        new EntityNotFoundException(
+                                "Jogo não encontrado na sua lista"
+                        )
+                );
+
+        usuarioJogo.setStatusJogo(dto.getStatusJogo());
+
+        return new UsuarioJogoResponseDto(
+                usuarioJogo.getId(),
+                usuarioJogo.getJogo().getId(),
+                usuarioJogo.getJogo().getNome(),
+                usuarioJogo.getJogo().getCapa(),
+                usuarioJogo.getStatusJogo()
+        );
     }
 
 }

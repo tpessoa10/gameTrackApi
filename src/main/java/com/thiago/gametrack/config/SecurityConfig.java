@@ -30,7 +30,7 @@ public class SecurityConfig {
         http
                 // 1. Habilite o suporte a CORS (se houver integração com frontend)
                 .cors(cors -> cors.configure(http))
-
+                .cors(cors -> {})
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(
                         SessionCreationPolicy.STATELESS

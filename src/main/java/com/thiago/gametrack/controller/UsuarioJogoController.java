@@ -3,6 +3,7 @@ package com.thiago.gametrack.controller;
 import com.thiago.gametrack.dto.UsuarioCreateDto;
 import com.thiago.gametrack.dto.UsuarioJogoCreateDto;
 import com.thiago.gametrack.dto.UsuarioJogoResponseDto;
+import com.thiago.gametrack.dto.UsuarioJogoUpdateDto;
 import com.thiago.gametrack.service.UsuarioJogoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -47,5 +48,21 @@ public class UsuarioJogoController {
                 usuarioJogoService.buscarMinhaLista(email);
 
         return ResponseEntity.ok(lista);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<UsuarioJogoResponseDto> alterarStatus(
+            @PathVariable Long id,
+            @Valid @RequestBody UsuarioJogoUpdateDto dto,
+            Authentication authentication
+    ) {
+        UsuarioJogoResponseDto jogoAtualizado =
+                usuarioJogoService.alterarStatus(
+                        id,
+                        dto,
+                        authentication.getName()
+                );
+
+        return ResponseEntity.ok(jogoAtualizado);
     }
 }
